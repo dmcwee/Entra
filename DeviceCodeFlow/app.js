@@ -147,7 +147,10 @@ function stopPolling() {
 
 async function pollToken() {
   try {
-    const res = await fetch('/DeviceCodeFlow/proxy/token', {
+    var uri = "https://davidmcweeproxy.azurewebsites.net/api/entra/devicecode";
+    var uri2 = "/DeviceCodeFlow/proxy/devicecode";
+
+    const res = await fetch(uri, {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
       body:    JSON.stringify({
