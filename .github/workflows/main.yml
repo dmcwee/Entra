@@ -1,0 +1,52 @@
+name: Update Pages Branch
+
+run-name: Update Pages Branch
+
+on:
+    push:
+        branches:
+            - main
+
+permissions:
+    contents: write
+
+concurrency:
+    group: update-pages-branch-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    update-pages-branch:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout main branch
+              uses: actions/checkout@v5
+              with:
+                ref: main
+
+            - name: list current directory
+              run: |
+                echo "Current branch: ${{ github.ref }}"
+                echo "Current directory: $(pwd)"
+                echo "Listing files:"
+                ls -la
+    
+            - name: Checkout ghpages branch
+              uses: actions/checkout@v5
+              with:
+                ref: gh-pages
+
+            - name: list gh-pages directory
+              run: |
+                echo "Current branch: ${{ github.ref }}"
+                echo "Current directory: $(pwd)"
+                echo "Listing files:"
+                ls -la
+
+            # - name: Copy files to gh-pages branch
+            #   run: |
+            #     # Copy all files from the main branch to the gh-pages branch
+            #     cp -r * ../gh-pages/
+            #     cd ../gh-pages
+            #     git add .
+            #     git commit -m "Update gh-pages branch"
+            #     git push origin gh-pages
