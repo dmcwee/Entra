@@ -5,7 +5,6 @@ run-name: Update Pages Branch
 on:
     push:
         branches:
-            - main
             - master
 
 permissions:
@@ -19,10 +18,10 @@ jobs:
     update-pages-branch:
         runs-on: ubuntu-latest
         steps:
-            - name: Checkout main branch
+            - name: Checkout master branch
               uses: actions/checkout@v5
               with:
-                ref: main
+                ref: master
 
             - name: list current directory
               run: |
