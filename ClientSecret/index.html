@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Client Secret Demo — Entra User List</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+    <!-- ─── Top Navigation ─────────────────────────────────────────────────────── -->
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+        <div class="nav-brand">Client Secret Demo</div>
+        <ul class="nav-links" role="list">
+            <li><a id="nav-compose" class="nav-link" href="../" aria-label="Compose email">Home</a></li>
+            <li><a id="nav-users" class="nav-link" href="./index.html" aria-label="View users list">Users</a></li>
+            <li><a id="nav-about" class="nav-link" href="./about.html" aria-label="About this demo">About</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+
+        <!-- ─── Loading View ──────────────────────────────────────────────────────── -->
+        <section id="view-loading" class="view">
+            <div class="loading-card">
+                <div class="loading-icon" aria-hidden="true">&#128273;</div>
+                <h1 class="loading-title">Client Secret Demo</h1>
+                <p class="loading-subtitle">
+                    Acquiring an application token using the Client Credentials flow
+                    and loading users from Microsoft Graph&hellip;
+                </p>
+                <div id="loading-status" class="status-message hidden" role="alert" aria-live="polite"></div>
+                <div id="loading-spinner" class="spinner-container" aria-live="polite">
+                    <div class="spinner" role="status" aria-label="Loading"></div>
+                    <span>Authenticating&hellip;</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ─── Users View ─────────────────────────────────────────────────────────── -->
+        <section id="view-users" class="view hidden">
+            <div class="users-header">
+                <h2 class="users-title">Entra ID Users</h2>
+                <span id="user-count" class="count-badge">0 users</span>
+            </div>
+
+            <div id="users-status" class="status-message hidden" role="alert" aria-live="polite"></div>
+
+            <div class="users-table-wrapper">
+                <table class="users-table" aria-label="Entra ID user list">
+                    <thead>
+                        <tr>
+                            <th scope="col">Display Name</th>
+                            <th scope="col">User Principal Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Job Title</th>
+                            <th scope="col">Department</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-tbody"></tbody>
+                </table>
+            </div>
+
+            <div class="load-more-row">
+                <button id="btn-load-more" class="btn-secondary hidden">Load More</button>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="authConfig.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

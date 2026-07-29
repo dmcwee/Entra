@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multi-Tenant Profile Demo</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ─── Top Navigation ─────────────────────────────────────────────────────── -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-brand">Multi-Tenant Profile Demo</div>
+    <ul class="nav-links" role="list">
+      <li><a id="nav-compose" class="nav-link" href="../" aria-label="Compose email">Home</a></li>
+      <li><a id="nav-profile" class="nav-link nav-link-disabled" href="#" aria-disabled="true" aria-label="View your profile">Profile</a></li>
+      <li><a id="nav-about" class="nav-link" href="./about.html" aria-label="About this demo">About</a></li>
+    </ul>
+    <div class="nav-auth">
+      <button id="btn-signin" class="btn-nav-signin">Sign In</button>
+      <div id="nav-user" class="nav-user hidden">
+        <span id="nav-username" class="nav-username"></span>
+        <button id="btn-signout" class="btn-nav-signout">Sign Out</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+
+    <!-- ─── Sign-In View ───────────────────────────────────────────────────────── -->
+    <section id="view-signin" class="view">
+      <div class="signin-card">
+        <div class="signin-icon" aria-hidden="true">&#128100;</div>
+        <h1 class="signin-title">Multi-Tenant Profile Demo</h1>
+        <p class="signin-subtitle">
+          Sign in with your Microsoft 365 or personal Microsoft account
+          to view your profile details from Microsoft Graph.
+        </p>
+        <div id="signin-status" class="status-message hidden" role="alert" aria-live="polite"></div>
+        <button id="btn-signin-main" class="btn-primary btn-signin-main">
+          Sign In with Microsoft
+        </button>
+      </div>
+    </section>
+
+    <!-- ─── Profile View ───────────────────────────────────────────────────────── -->
+    <section id="view-profile" class="view hidden">
+      <div class="profile-container">
+        <div id="profile-status" class="status-message hidden" role="alert" aria-live="polite"></div>
+        <div class="profile-card">
+
+          <!-- Avatar -->
+          <div class="profile-avatar-wrapper">
+            <img id="profile-avatar-img" class="profile-avatar hidden"
+                 alt="Profile photo" />
+            <div id="profile-avatar-initials"
+                 class="profile-avatar profile-avatar-initials hidden"
+                 aria-hidden="true"></div>
+          </div>
+
+          <!-- Headline -->
+          <h2 id="profile-display-name" class="profile-display-name">—</h2>
+          <p id="profile-email-sub" class="profile-email-sub">—</p>
+
+          <!-- Field grid -->
+          <div class="profile-fields-grid">
+            <div class="profile-field">
+              <span class="profile-field-label">First Name</span>
+              <span id="field-first-name" class="profile-field-value">—</span>
+            </div>
+            <div class="profile-field">
+              <span class="profile-field-label">Last Name</span>
+              <span id="field-last-name" class="profile-field-value">—</span>
+            </div>
+            <div class="profile-field profile-field-full">
+              <span class="profile-field-label">Email</span>
+              <span id="field-email" class="profile-field-value">—</span>
+            </div>
+            <div class="profile-field">
+              <span class="profile-field-label">Job Title</span>
+              <span id="field-job-title" class="profile-field-value">—</span>
+            </div>
+            <div class="profile-field">
+              <span class="profile-field-label">Department</span>
+              <span id="field-department" class="profile-field-value">—</span>
+            </div>
+            <div class="profile-field profile-field-full">
+              <span class="profile-field-label">Office Location</span>
+              <span id="field-office" class="profile-field-value">—</span>
+            </div>
+          </div>
+
+        </div><!-- /.profile-card -->
+      </div><!-- /.profile-container -->
+    </section>
+
+  </main>
+
+  <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.35.0/js/msal-browser.min.js"></script>
+  <script src="authConfig.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mail Sender — Risky Permissions Demo</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-brand">Mail Sender Demo</div>
+    <ul class="nav-links" role="list">
+      <li><a id="nav-compose" class="nav-link" href="../" aria-label="Compose email">Home</a></li>
+      <li><a id="nav-compose" class="nav-link nav-link-disabled" href="#" aria-label="Compose email">Compose</a></li>
+      <li><a id="nav-about" class="nav-link" href="./about.html" aria-label="About this application">About</a></li>
+    </ul>
+    <div class="nav-auth">
+      <button id="btn-signin" class="btn-nav-signin">Sign In</button>
+      <div id="nav-user" class="nav-user hidden">
+        <span id="nav-username" class="nav-username"></span>
+        <button id="btn-signout" class="btn-nav-signout">Sign Out</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+
+    <!-- Sign-In View -->
+    <section id="view-signin" class="view">
+      <div class="signin-card">
+        <div class="signin-icon" aria-hidden="true">&#9993;</div>
+        <h1 class="signin-title">Mail Sender Demo</h1>
+        <p class="signin-subtitle">
+          Sign in with your Microsoft 365 account to compose and send emails.
+        </p>
+        <button id="btn-signin-main" class="btn-primary btn-signin-main">
+          Sign In with Microsoft
+        </button>
+      </div>
+    </section>
+
+    <!-- Compose View -->
+    <section id="view-compose" class="view hidden">
+      <div class="compose-container">
+        <h2 class="compose-title">New Message</h2>
+        <div id="status-message" class="status-message hidden" role="alert" aria-live="polite"></div>
+        <form id="compose-form" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="field-to">
+              To <span class="required" aria-hidden="true">*</span>
+            </label>
+            <input
+              type="text"
+              id="field-to"
+              class="form-input"
+              placeholder="recipient@example.com, another@example.com"
+              autocomplete="off"
+              aria-required="true"
+            />
+            <span class="form-hint">Separate multiple addresses with commas or semicolons</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="field-cc">CC</label>
+            <input
+              type="text"
+              id="field-cc"
+              class="form-input"
+              placeholder="cc@example.com"
+              autocomplete="off"
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="field-subject">
+              Subject <span class="required" aria-hidden="true">*</span>
+            </label>
+            <input
+              type="text"
+              id="field-subject"
+              class="form-input"
+              placeholder="Enter email subject"
+              aria-required="true"
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="field-body">
+              Message <span class="required" aria-hidden="true">*</span>
+            </label>
+            <textarea
+              id="field-body"
+              class="form-textarea"
+              rows="12"
+              placeholder="Enter your message here..."
+              aria-required="true"
+            ></textarea>
+          </div>
+          <div class="form-actions">
+            <button type="button" id="btn-send" class="btn-primary">Send Message</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- <script src="https://cdn.jsdelivr.net/npm/@azure/msal-browser@3/dist/msal-browser.min.js"></script> -->
+  <script type="text/javascript" src="https://alcdn.msauth.net/browser/2.35.0/js/msal-browser.min.js"></script>
+  <script src="authConfig.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
