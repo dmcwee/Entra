@@ -51,11 +51,10 @@ jobs:
                 cp ../gh-pages/* . -r
                 ls -la
 
-            # - name: Copy files to gh-pages branch
-            #   run: |
-            #     # Copy all files from the main branch to the gh-pages branch
-            #     cp -r * ../gh-pages/
-            #     cd ../gh-pages
-            #     git add .
-            #     git commit -m "Update gh-pages branch"
-            #     git push origin gh-pages
+            - name: Commit and push changes
+              run: |
+                git config user.name "github-actions[bot]"
+                git config user.email "github-actions[bot]@users.noreply.github.com"
+                git add .
+                git commit -m "Update gh-pages branch" || echo "No changes to commit"
+                git push origin gh-pages
