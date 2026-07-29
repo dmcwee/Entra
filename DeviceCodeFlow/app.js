@@ -23,7 +23,7 @@ const state = {
     document.getElementById('btn-signin-main').disabled = true;
     document.getElementById('btn-signin').disabled = true;
     showStatus('signin-status', 'error',
-      'App is not configured. Open authConfig.js and replace the placeholder values.');
+      'App is not configured. Return to the home page and set the <b>Tenant ID</b> and <b>Client ID</b>.');
   }
 
   showView('signin');

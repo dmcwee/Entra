@@ -19,7 +19,7 @@ const msalConfig = {
     // "common" supports both M365 / Entra work-school accounts
     // and personal Microsoft accounts simultaneously.
     authority: 'https://login.microsoftonline.com/common',
-    redirectUri: localStorage.getItem('entra.MultiTenant.redirectUri') ?? 'http://localhost:3000/MultiTenant/',
+    redirectUri: localStorage.getItem('entra.MultiTenant.redirectUri') ?? 'https://davidmcwee.com/Entra/MultiTenant/',
   },
   cache: {
     cacheLocation: 'sessionStorage',
