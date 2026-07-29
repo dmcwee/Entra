@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mail Sender — Risky Permissions Demo</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-brand">Mail Sender Demo</div>
+    <ul class="nav-links" role="list">
+      <li><a id="nav-compose" class="nav-link" href="../" aria-label="Compose email">Home</a></li>
+      <li><a id="nav-compose" class="nav-link" href="./" aria-label="Compose email">Compose</a></li>
+      <li><a id="nav-about" class="nav-link" href="./about.html" aria-label="About this application">About</a></li>
+    </ul>
+    <div class="nav-auth">
+      <button id="btn-signin" class="btn-nav-signin">Sign In</button>
+      <div id="nav-user" class="nav-user hidden">
+        <span id="nav-username" class="nav-username"></span>
+        <button id="btn-signout" class="btn-nav-signout">Sign Out</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+
+    <!-- About View -->
+    <section id="view-about" class="view">
+      <div class="about-container">
+        <h2>About This Demo</h2>
+        <p class="about-lead">
+          This application demonstrates delegated email sending using the Microsoft Graph API and the
+          <code>Mail.Send</code> permission — one of the most powerful and consequently riskiest
+          delegated permissions available in Microsoft 365.
+        </p>
+
+        <h3>What Does Mail.Send Allow?</h3>
+        <p>
+          <code>Mail.Send</code> is a delegated Microsoft Graph permission that authorizes an
+          application to send email messages as the signed-in user. Once the user consents, the
+          application can send any message, to any recipient, at any time — without asking the user
+          for approval on a per-message basis.
+        </p>
+
+        <h3>Why Is It Considered Risky?</h3>
+        <ul class="about-list">
+          <li>
+            <strong>No per-message confirmation.</strong> After the user consents once, the app can
+            send unlimited emails on their behalf without any further prompts or approvals.
+          </li>
+          <li>
+            <strong>Unrestricted recipients and content.</strong> The permission places no limits on
+            who the app can send to, how many emails it sends, or what those emails contain.
+          </li>
+          <li>
+            <strong>Token theft risk.</strong> A bearer token that carries the <code>Mail.Send</code>
+            scope can be used by anyone who obtains it to send email as the user, for the entire
+            lifetime of the token — typically 60–90 minutes without refresh.
+          </li>
+          <li>
+            <strong>Phishing and impersonation.</strong> A malicious or compromised application can
+            use this permission to send convincing phishing emails that appear to originate from a
+            trusted user's mailbox.
+          </li>
+          <li>
+            <strong>Reputation and compliance exposure.</strong> Unauthorized emails sent through a
+            user's account can damage organizational reputation, trigger spam filters, and create
+            compliance liability.
+          </li>
+        </ul>
+
+        <h3>What This Demo Illustrates</h3>
+        <p>
+          This demo shows how little friction exists between an app gaining consent to
+          <code>Mail.Send</code> and being able to act on it. The send action requires only a valid
+          access token — no further confirmation, no secondary approval, and no audit trail beyond
+          what appears in the user's Sent Items folder.
+        </p>
+        <p>
+          The intent is to help security teams and administrators understand why controls such as
+          <strong>admin consent workflows</strong>, <strong>app permission reviews</strong>, and
+          <strong>Conditional Access for workload identities</strong> are important when
+          <code>Mail.Send</code> is involved.
+        </p>
+
+        <h3>Permissions Used</h3>
+        <table class="about-table">
+          <thead>
+            <tr>
+              <th>Permission</th>
+              <th>Type</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>Mail.Send</code></td>
+              <td>Delegated</td>
+              <td>Send mail as the signed-in user</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- <script src="https://cdn.jsdelivr.net/npm/@azure/msal-browser@3/dist/msal-browser.min.js"></script> -->
+  <!--<script type="text/javascript" src="https://alcdn.msauth.net/browser/2.35.0/js/msal-browser.min.js"></script>
+  <script src="authConfig.js"></script>
+  <script src="app.js"></script>-->
+</body>
+</html>

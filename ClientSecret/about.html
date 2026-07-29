@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client Secret Demo — About</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ─── Top Navigation ─────────────────────────────────────────────────────── -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-brand">Client Secret Demo</div>
+    <ul class="nav-links" role="list">
+      <li><a id="nav-compose" class="nav-link" href="../" aria-label="Compose email">Home</a></li>
+      <li><a id="nav-users" class="nav-link" href="./" aria-label="View users list">Users</a></li>
+      <li><a id="nav-about" class="nav-link active" href="./about.html" aria-label="About this demo">About</a></li>
+    </ul>
+  </nav>
+
+  <main class="main-content">
+
+    <!-- ─── About View ─────────────────────────────────────────────────────────── -->
+    <section id="view-about" class="view">
+      <div class="about-container">
+        <h2>About This Demo</h2>
+        <p class="about-lead">
+          This application demonstrates the OAuth 2.0 Client Credentials Grant and illustrates
+          why storing a client secret inside browser JavaScript is one of the most significant
+          secret-exposure risks in modern application development.
+        </p>
+
+        <h3>What is the Client Credentials Flow?</h3>
+        <p>
+          The Client Credentials Grant (<a href="https://datatracker.ietf.org/doc/html/rfc6749#section-4.4"
+          target="_blank" rel="noopener noreferrer">RFC 6749 §4.4</a>) is designed for
+          machine-to-machine (M2M) authentication where no user is involved. The application
+          authenticates as itself — using its own identity — rather than acting on behalf of a
+          signed-in user.
+        </p>
+
+        <h3>How it Works</h3>
+        <ol class="about-steps">
+          <li>The application sends a <code>POST</code> to the tenant's
+              <code>/oauth2/v2.0/token</code> endpoint with its <code>client_id</code>,
+              <code>client_secret</code>, and a <code>scope</code> ending in
+              <code>/.default</code>.</li>
+          <li>Microsoft Entra validates the credentials and, if the required Application
+              permissions have been admin-consented, returns an access token.</li>
+          <li>The application attaches the token as a <code>Bearer</code> header on every
+              Microsoft Graph request.</li>
+          <li>There is no user sign-in prompt, no redirect, and no user session — the token
+              represents the application identity only.</li>
+        </ol>
+
+        <h3>Delegated vs. Application Permissions</h3>
+        <p>
+          The Client Credentials flow exclusively uses <strong>Application permissions</strong>,
+          not Delegated permissions. Delegated permissions require a signed-in user whose
+          identity is "delegated" to the application. Because this flow has no user, only
+          Application permissions (granted by an administrator via admin consent) apply.
+        </p>
+        <p>
+          In this demo the app registration must have <code>User.Read.All</code> granted as an
+          <strong>Application permission</strong> with admin consent. An app-only token with this
+          permission can read every user in the directory regardless of whether any user has
+          consented.
+        </p>
+
+        <h3>Why Storing a Client Secret in the Browser Is Dangerous</h3>
+        <p>
+          A client secret is functionally a password for the application. Placing it in a
+          JavaScript file that is delivered to every browser exposes it unconditionally.
+        </p>
+
+        <ul class="about-list">
+          <li>
+            <strong>Any visitor can extract it.</strong>
+            Opening browser DevTools → Sources or simply viewing the page source reveals the
+            secret in plain text. No special skills or tooling are required.
+            <div class="risk-callout">
+              <strong>This demo intentionally does this for educational purposes.</strong>
+              In a real application, a secret in client-side code must be treated as
+              already-compromised from the moment it is deployed.
+            </div>
+          </li>
+          <li>
+            <strong>The token has Application-level scope.</strong>
+            Unlike a Delegated token (scoped to one user's access), a Client Credentials token
+            carries the full permission set granted to the application. In this demo that means
+            read access to every user in the tenant. An attacker who steals the secret can
+            acquire that same token independently, with no involvement from any user.
+          </li>
+          <li>
+            <strong>No user context means no Conditional Access protection.</strong>
+            Conditional Access policies that enforce MFA, compliant devices, or trusted
+            locations apply to user sign-ins. Client Credentials tokens bypass all of these
+            controls because there is no user sign-in event. An attacker using a stolen secret
+            from an untrusted network, unknown device, or foreign country will receive a valid
+            token regardless of your Conditional Access posture.
+          </li>
+          <li>
+            <strong>Secrets cannot be selectively revoked per client.</strong>
+            Rotating the secret (the correct remediation) invalidates it for every instance of
+            the application — including legitimate deployments — forcing a redeployment.
+            If the secret is in client-side code, the old secret is still visible in browser
+            caches, service workers, and CDN edge nodes until they are purged.
+          </li>
+          <li>
+            <strong>Browser extensions and XSS can silently exfiltrate it.</strong>
+            A malicious browser extension or a single Cross-Site Scripting vulnerability on
+            any page of the application can read the secret from the JavaScript environment
+            and transmit it to an attacker-controlled server.
+          </li>
+        </ul>
+
+        <h3>Recommended Alternatives</h3>
+        <ul class="about-list">
+          <li>
+            <strong>Backend proxy (strongly recommended).</strong>
+            Move token acquisition entirely to a server-side component. The client calls your
+            API; your API acquires the Graph token with the secret stored in a server environment
+            variable or secret store, and proxies only the data the client needs. The secret
+            never reaches the browser.
+          </li>
+          <li>
+            <strong>Managed Identity (Azure-hosted workloads).</strong>
+            If your application runs on Azure (App Service, Functions, Container Apps, etc.),
+            use a System-assigned or User-assigned Managed Identity. No secret is needed at all —
+            Azure handles credential rotation transparently and the identity cannot be extracted
+            from the environment.
+          </li>
+          <li>
+            <strong>Certificate-based authentication.</strong>
+            Replace the client secret with an X.509 certificate. The private key can be stored
+            in Azure Key Vault or the Windows Certificate Store, making it significantly harder
+            to exfiltrate than a plain string value.
+          </li>
+          <li>
+            <strong>On-behalf-of flow (if a user is present).</strong>
+            If a user is already authenticated, use the
+            <a href="https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-on-behalf-of-flow"
+            target="_blank" rel="noopener noreferrer">On-Behalf-Of flow</a> to exchange the
+            user's token for a Graph token scoped to that user's access. This preserves
+            least-privilege and audit trails.
+          </li>
+          <li>
+            <strong>Federated identity credentials (workload identity federation).</strong>
+            For CI/CD pipelines (GitHub Actions, Azure DevOps) or Kubernetes workloads, use
+            federated credentials to eliminate secrets entirely. The external identity provider
+            (e.g. GitHub OIDC) issues a short-lived token that Entra accepts in exchange for an
+            app token.
+          </li>
+        </ul>
+
+        <h3>Permissions Used by This Demo</h3>
+        <table class="about-table">
+          <thead>
+            <tr>
+              <th>Permission</th>
+              <th>Type</th>
+              <th>Description</th>
+              <th>Admin Consent</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>User.Read.All</code></td>
+              <td>Application</td>
+              <td>Read all users' full profiles in the directory</td>
+              <td>Required</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="authConfig.js"></script>
+</body>
+</html>

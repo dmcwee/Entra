@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Multi-Tenant Profile Demo</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ─── Top Navigation ─────────────────────────────────────────────────────── -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-brand">Multi-Tenant Profile Demo</div>
+    <ul class="nav-links" role="list">
+      <li><a id="nav-compose" class="nav-link" href="../" aria-label="Compose email">Home</a></li>
+      <li><a class="nav-link" href="./index.html" aria-label="View your profile">Profile</a></li>
+      <li><a class="nav-link active" href="./about.html" aria-current="page" aria-label="About this demo">About</a></li>
+    </ul>
+  </nav>
+
+  <!-- ─── About Content ──────────────────────────────────────────────────────── -->
+  <main class="about-page">
+    <div class="about-container">
+
+      <h2>About This Demo</h2>
+      <p class="about-lead">
+        This application demonstrates how a multi-tenant Azure Entra ID app registration
+        can authenticate users from any Microsoft 365 tenant or personal Microsoft account
+        using the OAuth 2.0 Authorization Code flow (PKCE) with MSAL.js. While this pattern
+        enables broad reach, it introduces a distinct set of security risks that every
+        organization consuming or hosting a multi-tenant application should understand.
+      </p>
+
+      <h3>What is a Multi-Tenant Application?</h3>
+      <p>
+        An app registration in Microsoft Entra ID is single-tenant by default — it only
+        accepts sign-ins from users in the directory where it was registered. When the
+        supported account types are set to <em>"Accounts in any organizational directory
+        and personal Microsoft accounts"</em>, the app becomes multi-tenant: any user on
+        the Microsoft identity platform can be redirected to consent and sign in. The
+        <code>common</code> authority endpoint handles token issuance across all tenants
+        and personal accounts without further configuration.
+      </p>
+      <p>
+        This is powerful for SaaS products and public-facing tools, but it also means the
+        application's identity and permission model is visible to — and can be targeted by —
+        anyone on the internet who can construct a valid OAuth request.
+      </p>
+
+      <!-- ─── Risk Cards ──────────────────────────────────────────────────────── -->
+      <h3>Security Risks</h3>
+
+      <div class="risk-grid" role="list">
+
+        <div class="risk-card" role="listitem">
+          <div class="risk-card-icon" aria-hidden="true">&#128275;</div>
+          <div class="risk-card-title">Consent &amp; Permission Abuse</div>
+          <p class="risk-card-desc">
+            Any user in any tenant can grant delegated permissions to the app, including
+            scopes far broader than your application intends to use. Attackers can craft
+            phishing consent URLs using your legitimate client ID to harvest tokens for
+            sensitive scopes users did not realize they were approving.
+          </p>
+        </div>
+
+        <div class="risk-card" role="listitem">
+          <div class="risk-card-icon" aria-hidden="true">&#127907;</div>
+          <div class="risk-card-title">Illicit Consent Grant Attacks</div>
+          <p class="risk-card-desc">
+            A well-documented Microsoft identity attack pattern: adversaries register
+            look-alike apps that impersonate legitimate services and trick users into
+            granting OAuth consent. Once consent is granted, the attacker obtains a
+            persistent access token with no further authentication, bypassing MFA entirely.
+          </p>
+        </div>
+
+        <div class="risk-card" role="listitem">
+          <div class="risk-card-icon" aria-hidden="true">&#127760;</div>
+          <div class="risk-card-title">Tenant Isolation Failures</div>
+          <p class="risk-card-desc">
+            Multi-tenant apps must validate the <code>tid</code> (tenant ID) and
+            <code>iss</code> (issuer) claims on every incoming token. Applications that
+            skip this validation can inadvertently expose one tenant's data to users from
+            another tenant, or allow cross-tenant privilege escalation.
+          </p>
+        </div>
+
+        <div class="risk-card" role="listitem">
+          <div class="risk-card-icon" aria-hidden="true">&#9888;&#65039;</div>
+          <div class="risk-card-title">Broad Attack Surface</div>
+          <p class="risk-card-desc">
+            A single vulnerability — stored XSS, broken object-level access control, or
+            an insecure direct object reference — is exploitable against every tenant that
+            has consented to the application. The blast radius of any security defect
+            scales directly with the number of onboarded tenants.
+          </p>
+        </div>
+
+        <div class="risk-card" role="listitem">
+          <div class="risk-card-icon" aria-hidden="true">&#128272;</div>
+          <div class="risk-card-title">Credential &amp; Secret Exposure</div>
+          <p class="risk-card-desc">
+            Client secrets and certificates used by a multi-tenant app grant access to
+            the identity provider on behalf of all tenants. A single leaked secret or
+            compromised certificate allows an attacker to authenticate as the application
+            to every consented tenant simultaneously.
+          </p>
+        </div>
+
+        <div class="risk-card" role="listitem">
+          <div class="risk-card-icon" aria-hidden="true">&#128100;</div>
+          <div class="risk-card-title">Privilege Escalation via Guest Accounts</div>
+          <p class="risk-card-desc">
+            External users invited as guests may receive unintended permissions due to
+            misconfigured role assignments. In a multi-tenant context, a guest in one
+            tenant can use their token to interact with the same application as a user
+            from that tenant if tenant boundary checks are absent or insufficient.
+          </p>
+        </div>
+
+      </div><!-- /.risk-grid -->
+
+      <!-- ─── Mitigations ──────────────────────────────────────────────────────── -->
+      <h3>Recommended Mitigations</h3>
+      <p>
+        The risks above are well-understood and addressable through a combination of
+        Entra ID configuration, secure coding practices, and operational controls.
+      </p>
+
+      <ul class="mitigations-list">
+        <li>
+          <strong>Require admin consent.</strong> Configure the app registration to require
+          admin consent for all scopes. This prevents individual users from granting
+          delegated permissions and forces an administrator review before any token can
+          be issued to a new tenant.
+        </li>
+        <li>
+          <strong>Validate <code>tid</code> and <code>iss</code> token claims.</strong>
+          On every API request, verify that the token's issuer and tenant ID match an
+          allowlist of tenants that have been explicitly onboarded. Reject tokens from
+          unexpected tenants rather than trusting the <code>common</code> endpoint blindly.
+        </li>
+        <li>
+          <strong>Apply Conditional Access policies.</strong> Use Entra ID Conditional
+          Access to enforce compliant devices, approved locations, and strong
+          authentication methods for users accessing the application. Require phishing-
+          resistant MFA (FIDO2 / certificate-based) where supported.
+        </li>
+        <li>
+          <strong>Use least-privilege scopes.</strong> Request only the minimum permissions
+          required for each feature. Avoid broad scopes such as <code>Mail.ReadWrite</code>
+          or <code>Directory.ReadWrite.All</code> unless absolutely necessary, and audit
+          all granted permissions regularly.
+        </li>
+        <li>
+          <strong>Replace client secrets with managed identities or certificates.</strong>
+          Avoid long-lived client secrets. Prefer workload identity federation or
+          certificate-based authentication so that no static credential exists that could
+          be leaked from source control or configuration files.
+        </li>
+        <li>
+          <strong>Monitor consent grants and sign-in activity.</strong> Enable Entra ID
+          audit logs and sign-in logs. Alert on new consent grants, token issuance from
+          unexpected tenants, and application permission changes. Review the
+          <em>OAuth App Governance</em> blade in Microsoft Defender for Cloud Apps for
+          anomalous application behavior.
+        </li>
+        <li>
+          <strong>Enforce app-level authorization in addition to token validation.</strong>
+          Do not rely solely on scopes granted at consent time. Implement authorization
+          checks within the application layer to ensure that authenticated users can only
+          access resources belonging to their own tenant.
+        </li>
+      </ul>
+
+    </div><!-- /.about-container -->
+  </main>
+
+</body>
+</html>

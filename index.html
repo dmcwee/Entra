@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entra ID Demos</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary:      #0078d4;
+      --primary-dark: #005a9e;
+      --bg:           #f6f8fa;
+      --surface:      #ffffff;
+      --border:       #e1e4e8;
+      --text:         #24292e;
+      --text-muted:   #586069;
+      --font:         -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono:    "Consolas", "SFMono-Regular", monospace;
+      --radius:       6px;
+    }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+    header { background: #1f2937; color: #f9fafb; padding: 28px 32px; }
+    header h1 { font-size: 22px; font-weight: 600; }
+    header p  { font-size: 14px; color: #9ca3af; margin-top: 6px; }
+    main { flex: 1; padding: 40px 32px; max-width: 760px; }
+    section { margin-bottom: 40px; }
+    .section-title {
+      font-size: 13px; font-weight: 600; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 16px;
+    }
+
+    /* ── App list ── */
+    ul.app-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .app-item  { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .app-link  {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px; text-decoration: none; color: var(--text);
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .app-link:hover { background: #eef5fc; }
+    .app-item:has(.app-link:hover) { border-color: var(--primary); }
+    .app-name  { font-size: 16px; font-weight: 500; font-family: var(--font-mono); }
+    .app-arrow { font-size: 18px; color: var(--primary); }
+
+    /* ── Settings card ── */
+    .settings-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 24px; display: flex; flex-direction: column; gap: 24px; }
+    .app-section { border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+    .app-section:last-of-type { border-bottom: none; padding-bottom: 0; }
+    .app-section-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 14px; font-family: var(--font-mono); }
+    .field-group { display: flex; flex-direction: column; gap: 10px; }
+    .field { display: flex; flex-direction: column; gap: 4px; }
+    .field label { font-size: 13px; font-weight: 500; color: var(--text-muted); }
+    .field input {
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 8px 12px; font-size: 14px; font-family: var(--font-mono);
+      color: var(--text); background: var(--bg); width: 100%;
+      transition: border-color 0.15s;
+    }
+    .field input:focus { outline: none; border-color: var(--primary); background: #fff; }
+
+    /* ── Form footer ── */
+    .form-footer { display: flex; align-items: center; gap: 12px; margin-top: 4px; }
+    .btn-save {
+      background: var(--primary); color: #fff; border: none;
+      border-radius: var(--radius); padding: 10px 20px;
+      font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.15s;
+    }
+    .btn-save:hover { background: var(--primary-dark); }
+    .btn-clear {
+      background: transparent; color: var(--text-muted);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 10px 20px; font-size: 14px; cursor: pointer; transition: background 0.15s;
+    }
+    .btn-clear:hover { background: var(--bg); }
+    #save-status { font-size: 13px; color: #155724; display: none; }
+
+    footer { padding: 20px 32px; font-size: 13px; color: var(--text-muted); border-top: 1px solid var(--border); }
+    code { font-family: var(--font-mono); background: #f3f4f6; padding: 1px 5px; border-radius: 3px; font-size: 0.875em; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Entra ID Demo Applications</h1>
+    <p>Select a demo below, or configure your app registrations in the Settings panel.</p>
+  </header>
+
+  <main>
+
+    <!-- ─── App Links ───────────────────────────────────────────────────────── -->
+    <section aria-label="Demo applications">
+      <h2 class="section-title">Demos</h2>
+      <ul class="app-list">
+        <li class="app-item">
+          <a class="app-link" href="/ClientSecret/">
+            <span class="app-name">ClientSecret</span>
+            <span class="app-arrow" aria-hidden="true">&#8594;</span>
+          </a>
+        </li>
+        <li class="app-item">
+          <a class="app-link" href="/DeviceCodeFlow/">
+            <span class="app-name">DeviceCodeFlow</span>
+            <span class="app-arrow" aria-hidden="true">&#8594;</span>
+          </a>
+        </li>
+        <li class="app-item">
+          <a class="app-link" href="/MultiTenant/">
+            <span class="app-name">MultiTenant</span>
+            <span class="app-arrow" aria-hidden="true">&#8594;</span>
+          </a>
+        </li>
+        <li class="app-item">
+          <a class="app-link" href="/RiskyPermissions/">
+            <span class="app-name">RiskyPermissions</span>
+            <span class="app-arrow" aria-hidden="true">&#8594;</span>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ─── Settings ────────────────────────────────────────────────────────── -->
+    <section aria-label="App registration settings">
+      <h2 class="section-title">Settings</h2>
+      <div class="settings-card">
+
+        <!-- Shared -->
+        <div class="app-section">
+          <div class="app-section-title">Shared</div>
+          <div class="field-group">
+            <div class="field">
+              <label for="tenant-id">Entra Tenant ID</label>
+              <input id="tenant-id" type="text"
+                     placeholder="YOUR_TENANT_ID_HERE"
+                     autocomplete="off" spellcheck="false" />
+            </div>
+          </div>
+        </div>
+
+        <!-- ClientSecret -->
+        <div class="app-section">
+          <div class="app-section-title">ClientSecret</div>
+          <div class="field-group">
+            <div class="field">
+              <label for="cs-client-id">Client ID</label>
+              <input id="cs-client-id" type="text"
+                     placeholder="YOUR_CLIENT_ID_HERE"
+                     autocomplete="off" spellcheck="false" />
+            </div>
+            <div class="field">
+              <label for="cs-client-secret">Client Secret</label>
+              <input id="cs-client-secret" type="password"
+                     placeholder="YOUR_CLIENT_SECRET_HERE"
+                     autocomplete="off" />
+            </div>
+          </div>
+        </div>
+
+        <!-- DeviceCodeFlow -->
+        <div class="app-section">
+          <div class="app-section-title">DeviceCodeFlow</div>
+          <div class="field-group">
+            <div class="field">
+              <label for="dcf-client-id">Client ID</label>
+              <input id="dcf-client-id" type="text"
+                     placeholder="YOUR_CLIENT_ID_HERE"
+                     autocomplete="off" spellcheck="false" />
+            </div>
+          </div>
+        </div>
+
+        <!-- MultiTenant -->
+        <div class="app-section">
+          <div class="app-section-title">MultiTenant</div>
+          <div class="field-group">
+            <div class="field">
+              <label for="mt-client-id">Client ID</label>
+              <input id="mt-client-id" type="text"
+                     placeholder="40664342-8fff-4e5d-971d-b710b3336702"
+                     autocomplete="off" spellcheck="false" />
+            </div>
+            <div class="field">
+              <label for="mt-redirect-uri">Redirect URI</label>
+              <input id="mt-redirect-uri" type="text"
+                     placeholder="YOUR_REDIRECT_URI_HERE"
+                     autocomplete="off" spellcheck="false" />
+            </div>
+          </div>
+        </div>
+
+        <!-- RiskyPermissions -->
+        <div class="app-section">
+          <div class="app-section-title">RiskyPermissions</div>
+          <div class="field-group">
+            <div class="field">
+              <label for="rp-client-id">Client ID</label>
+              <input id="rp-client-id" type="text"
+                     placeholder="YOUR_CLIENT_ID_HERE"
+                     autocomplete="off" spellcheck="false" />
+            </div>
+            <div class="field">
+              <label for="rp-redirect-uri">Redirect URI</label>
+              <input id="rp-redirect-uri" type="text"
+                     placeholder="YOUR_REDIRECT_URI_HERE"
+                     autocomplete="off" spellcheck="false" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-footer">
+          <button class="btn-save" onclick="saveSettings()">Save Settings</button>
+          <button class="btn-clear" onclick="clearSettings()">Clear All</button>
+          <span id="save-status" role="status" aria-live="polite">Settings saved.</span>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    Register each app&rsquo;s redirect URI as a SPA redirect URI in its Azure AD app registration.
+  </footer>
+
+  <script>
+    'use strict';
+
+    const KEYS = {
+      tenantId:       'entra.tenantId',
+      csClientId:     'entra.ClientSecret.clientId',
+      csClientSecret: 'entra.ClientSecret.clientSecret',
+      dcfClientId:    'entra.DeviceCodeFlow.clientId',
+      mtClientId:     'entra.MultiTenant.clientId',
+      mtRedirectUri:  'entra.MultiTenant.redirectUri',
+      rpClientId:     'entra.RiskyPermissions.clientId',
+      rpRedirectUri:  'entra.RiskyPermissions.redirectUri',
+    };
+
+    function loadSettings() {
+      document.getElementById('tenant-id').value        = localStorage.getItem(KEYS.tenantId)        ?? 'YOUR_TENANT_ID_HERE';
+      document.getElementById('cs-client-id').value     = localStorage.getItem(KEYS.csClientId)      ?? 'YOUR_CLIENT_ID_HERE';
+      document.getElementById('cs-client-secret').value = localStorage.getItem(KEYS.csClientSecret)  ?? 'YOUR_CLIENT_SECRET_HERE';
+      document.getElementById('dcf-client-id').value    = localStorage.getItem(KEYS.dcfClientId)     ?? 'YOUR_CLIENT_ID_HERE';
+      document.getElementById('mt-client-id').value     = localStorage.getItem(KEYS.mtClientId)      ?? '40664342-8fff-4e5d-971d-b710b3336702';
+      document.getElementById('mt-redirect-uri').value  = localStorage.getItem(KEYS.mtRedirectUri)   ?? 'YOUR_REDIRECT_URI_HERE';
+      document.getElementById('rp-client-id').value     = localStorage.getItem(KEYS.rpClientId)      ?? 'YOUR_CLIENT_ID_HERE';
+      document.getElementById('rp-redirect-uri').value  = localStorage.getItem(KEYS.rpRedirectUri)   ?? 'YOUR_REDIRECT_URI_HERE';
+    }
+
+    function saveSettings() {
+      function set(key, value) {
+        const trimmed = value.trim();
+        if (trimmed) {
+          localStorage.setItem(key, trimmed);
+        } else {
+          localStorage.removeItem(key);
+        }
+      }
+
+      set(KEYS.tenantId,       document.getElementById('tenant-id').value);
+      set(KEYS.csClientId,     document.getElementById('cs-client-id').value);
+      set(KEYS.csClientSecret, document.getElementById('cs-client-secret').value);
+      set(KEYS.dcfClientId,    document.getElementById('dcf-client-id').value);
+      set(KEYS.mtClientId,     document.getElementById('mt-client-id').value);
+      set(KEYS.mtRedirectUri,  document.getElementById('mt-redirect-uri').value);
+      set(KEYS.rpClientId,     document.getElementById('rp-client-id').value);
+      set(KEYS.rpRedirectUri,  document.getElementById('rp-redirect-uri').value);
+
+      const status = document.getElementById('save-status');
+      status.style.display = 'inline';
+      setTimeout(() => { status.style.display = 'none'; }, 3000);
+    }
+
+    function clearSettings() {
+      if (!confirm('Remove all saved settings from browser storage?')) return;
+      Object.values(KEYS).forEach(k => localStorage.removeItem(k));
+      loadSettings();
+    }
+
+    loadSettings();
+  </script>
+
+</body>
+</html>

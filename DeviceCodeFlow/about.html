@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Device Code Flow — Entra User List</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ─── Top Navigation ─────────────────────────────────────────────────────── -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-brand">Device Code Flow Demo</div>
+    <ul class="nav-links" role="list">
+      <li><a id="nav-compose" class="nav-link" href="../" aria-label="Compose email">Home</a></li>
+      <li><a id="nav-users" class="nav-link" href="./" aria-disabled="true" aria-label="View users list">Users</a></li>
+      <li><a id="nav-about" class="nav-link" href="./about.html" aria-label="About this demo">About</a></li>
+    </ul>
+    <div class="nav-auth">
+      <button id="btn-signin" class="btn-nav-signin">Sign In</button>
+      <div id="nav-user" class="nav-user hidden">
+        <span id="nav-username" class="nav-username"></span>
+        <button id="btn-signout" class="btn-nav-signout">Sign Out</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main-content">
+
+    <!-- ─── About View ─────────────────────────────────────────────────────────── -->
+    <section id="view-about" class="view view-about">
+      <div class="about-container">
+        <h2>About This Demo</h2>
+        <p class="about-lead">
+          This application demonstrates the OAuth 2.0 Device Authorization Grant (Device Code Flow)
+          and illustrates why it is one of the most commonly abused authentication flows in
+          modern identity-based attacks.
+        </p>
+
+        <h3>What is Device Code Flow?</h3>
+        <p>
+          The Device Code Flow (<a href="https://datatracker.ietf.org/doc/html/rfc8628" target="_blank"
+          rel="noopener noreferrer">RFC 8628</a>) was designed for input-constrained devices — smart TVs,
+          printers, command-line tools, and IoT devices — that cannot open a browser or accept keyboard
+          input easily. Instead of redirecting the user, the device displays a short code and a URL;
+          the user completes sign-in on a separate device they already trust.
+        </p>
+
+        <h3>How it Works</h3>
+        <ol class="about-steps">
+          <li>The app calls the <code>/oauth2/v2.0/devicecode</code> endpoint and receives a
+              <code>user_code</code>, a <code>device_code</code>, and a verification URL.</li>
+          <li>The app displays the <code>user_code</code> and URL to the user.</li>
+          <li>The user visits <code>https://microsoft.com/devicelogin</code> on any browser,
+              enters the code, and signs in.</li>
+          <li>Meanwhile, the app polls the <code>/oauth2/v2.0/token</code> endpoint every few seconds
+              with the <code>device_code</code>.</li>
+          <li>Once the user completes sign-in, the next poll returns an access token and
+              optionally a refresh token.</li>
+        </ol>
+
+        <h3>Why It Can Be Risky</h3>
+
+        <p>
+          The same properties that make Device Code Flow convenient for constrained devices also make
+          it a powerful attack tool. The following threats are well-documented in the wild.
+        </p>
+
+        <ul class="about-list">
+          <li>
+            <strong>Device Code Phishing (T1528).</strong>
+            An attacker initiates a real Device Code Flow against your tenant, then sends the
+            <code>user_code</code> and link to a victim via email, Teams, or SMS — disguised as an
+            IT helpdesk request or a routine login prompt. The victim visits the legitimate Microsoft
+            URL, enters the code, and signs in. Because they authenticated against the real Microsoft
+            endpoint, they see no warnings. The attacker's polling loop immediately receives a valid
+            access token and refresh token scoped to the victim's account.
+            <div class="attack-callout">
+              <strong>Why this works at scale</strong>
+              The attacker does not need to host a phishing page or intercept any traffic. The entire
+              authentication happens on Microsoft's own infrastructure. The only "malicious" step is
+              sending a 9-character code to the victim — trivially embeddable in any message.
+            </div>
+          </li>
+          <li>
+            <strong>No redirect URI to restrict.</strong>
+            Authorization Code Flow allows administrators to lock down exactly which URLs a token
+            can be delivered to. Device Code Flow has no redirect URI — any application that holds
+            the correct <code>client_id</code> can initiate the flow and receive a token.
+          </li>
+          <li>
+            <strong>Long-lived refresh tokens.</strong>
+            On tenants without Continuous Access Evaluation (CAE), refresh tokens issued through
+            Device Code Flow can be valid for up to 90 days. A single successful phish can provide
+            persistent access long after the victim has changed their password (token revocation
+            does not always invalidate already-issued refresh tokens without explicit revocation).
+          </li>
+          <li>
+            <strong>No visible app identity at sign-in time.</strong>
+            When the user visits <code>microsoft.com/devicelogin</code>, the page shows
+            "Microsoft" — not the name of the specific third-party application that initiated the
+            request. Users rarely question the generic prompt, making it difficult to detect a
+            spoofed or unexpected request.
+          </li>
+          <li>
+            <strong>Bypasses MFA assumptions.</strong>
+            Because the user completes MFA as part of the Device Code sign-in, the resulting token
+            carries an MFA claim. Downstream controls that rely on "token has MFA" as proof of a
+            secure session cannot distinguish a legitimate MFA completion from one performed
+            unknowingly on behalf of an attacker.
+          </li>
+        </ul>
+
+        <h3>Real-World Threat Landscape</h3>
+        <p>
+          Device Code Phishing has been used in targeted attacks against government agencies, cloud
+          service providers, and enterprise organisations. The technique is documented in
+          <strong>MITRE ATT&amp;CK as T1528</strong> (Steal Application Access Token) and has been
+          observed in campaigns attributed to nation-state threat actors exploiting Microsoft 365
+          and Azure environments.
+        </p>
+
+        <h3>Mitigations</h3>
+        <ul class="about-list">
+          <li>
+            <strong>Conditional Access — block or restrict Device Code Flow.</strong>
+            Use the <em>Authentication flows</em> condition in Conditional Access to block
+            Device Code Flow entirely, or require a compliant device / trusted location.
+            (<code>authenticationFlowsPolicy</code> in the Microsoft Graph API.)
+          </li>
+          <li>
+            <strong>Restrict which applications can use it.</strong>
+            Limit the set of approved applications via app-level Conditional Access policies.
+            Require admin pre-approval for any application requesting Device Code Flow.
+          </li>
+          <li>
+            <strong>User education.</strong>
+            Legitimate IT will never send a <code>user_code</code> via email, Teams, or SMS and
+            ask you to enter it. Any unsolicited device code request should be treated as a
+            phishing attempt.
+          </li>
+          <li>
+            <strong>Monitor sign-in logs.</strong>
+            Filter Entra sign-in logs for <code>deviceCodeFlow</code> authentication method entries.
+            Alert on codes entered from unexpected IP addresses, countries, or at unusual times.
+          </li>
+          <li>
+            <strong>Enable Continuous Access Evaluation (CAE).</strong>
+            CAE reduces the effective token lifetime to minutes for supported workloads, limiting
+            the damage window if a token is stolen via Device Code Phishing.
+          </li>
+          <li>
+            <strong>Token revocation response.</strong>
+            If a Device Code Phish is suspected, immediately revoke all refresh tokens for the
+            affected account in Entra ID (<em>Users &gt; Revoke sessions</em>) and audit the
+            sign-in log for downstream access using the stolen token.
+          </li>
+        </ul>
+
+        <h3>Permissions Used by This Demo</h3>
+        <table class="about-table">
+          <thead>
+            <tr>
+              <th>Permission</th>
+              <th>Type</th>
+              <th>Description</th>
+              <th>Admin Consent</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>User.Read.All</code></td>
+              <td>Delegated</td>
+              <td>Read all users' full profiles in the directory</td>
+              <td>Required</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!--<script src="authConfig.js"></script>
+  <script src="app.js"></script>-->
+</body>
+</html>
