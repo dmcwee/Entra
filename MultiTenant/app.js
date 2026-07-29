@@ -11,12 +11,12 @@ let photoObjectUrl = null;
 // ─── Initialization ───────────────────────────────────────────────────────────
 
 (async function init() {
-  if (msalConfig.auth.clientId === 'YOUR_CLIENT_ID_HERE') {
+  if (msalConfig.auth.clientId === 'YOUR_CLIENT_ID_HERE' || msalConfig.auth.redirectUri === 'YOUR_REDIRECT_URI_HERE') {
     document.getElementById('btn-signin-main').disabled = true;
     document.getElementById('btn-signin').disabled = true;
     showView('signin');
     showStatus('signin-status', 'error',
-      'App is not configured. Open authConfig.js and replace the placeholder values.');
+      'App is not configured. Return to the home page and set the <b>Redirect URI</b> and <b>Client ID</b>.');
     return;
   }
 

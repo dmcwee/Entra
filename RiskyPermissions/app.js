@@ -14,7 +14,7 @@ const msalInstance = new msal.PublicClientApplication(msalConfig);
     showView("signin");
     showStatus(
       "error",
-      "App is not configured. Open authConfig.js and replace the placeholder values with your Azure AD app registration details."
+      'App is not configured. Return to the home page and set the <b>Redirect URI</b> and <b>Client ID</b>.'
     );
     return;
   }

@@ -18,7 +18,7 @@ const state = {
   if (unconfigured) {
     hideSpinner();
     showStatus('loading-status', 'error',
-      'App is not configured. Open authConfig.js and replace the placeholder values.');
+      'App is not configured. Return to the home page and set the <b>Client ID</b> and <b>Client Secret</b>.');
     return;
   }
 
