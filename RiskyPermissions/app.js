@@ -21,7 +21,7 @@ const msalInstance = new msal.PublicClientApplication(msalConfig);
 
   await msalInstance.initialize();
 
-  // Handle any redirect response (not used in popup flow, but safe to call)
+  // Process the auth code returned after loginRedirect completes.
   const redirectResponse = await msalInstance.handleRedirectPromise().catch(console.error);
   if (redirectResponse) {
     msalInstance.setActiveAccount(redirectResponse.account);
@@ -81,28 +81,19 @@ function updateNavAuthState(account) {
 
 async function handleSignIn() {
   try {
-    const response = await msalInstance.loginPopup(loginRequest);
-    msalInstance.setActiveAccount(response.account);
-    updateNavAuthState(response.account);
-    showView("compose");
+    await msalInstance.loginRedirect(loginRequest);
   } catch (error) {
-    if (error.errorCode !== "user_cancelled") {
-      console.error("Sign-in error:", error);
-      showStatus("error", `Sign-in failed: ${error.message}`);
-    }
+    console.error("Sign-in error:", error);
+    showStatus("error", `Sign-in failed: ${error.message}`);
   }
 }
 
 async function handleSignOut() {
   const account = msalInstance.getActiveAccount();
   try {
-    await msalInstance.logoutPopup({ account });
+    await msalInstance.logoutRedirect({ account });
   } catch (error) {
     console.error("Sign-out error:", error);
-  } finally {
-    updateNavAuthState(null);
-    showView("signin");
-    document.getElementById("status-message").classList.add("hidden");
   }
 }
 
