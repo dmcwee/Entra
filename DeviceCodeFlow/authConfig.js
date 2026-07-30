@@ -12,6 +12,8 @@ const authConfig = {
   clientId: localStorage.getItem('entra.DeviceCodeFlow.clientId') ?? 'YOUR_CLIENT_ID_HERE',
   tenantId: localStorage.getItem('entra.tenantId') ?? 'YOUR_TENANT_ID_HERE',
   scopes: ['https://graph.microsoft.com/User.Read.All'],
+  //devicecodeEndpoint: '/DeviceCodeFlow/proxy/devicecode',
+  //devicetokenEndpoint: '/DeviceCodeFlow/proxy/token',
+  devicecodeEndpoint:  'https://davidmcweeproxy.azurewebsites.net/api/entra/devicecode',
+  devicetokenEndpoint: 'https://davidmcweeproxy.azurewebsites.net/api/entra/devicetoken',
 };
-
-

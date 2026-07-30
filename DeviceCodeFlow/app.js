@@ -80,10 +80,7 @@ async function handleStart() {
   hideStatus('signin-status');
 
   try {
-    var uri = "https://davidmcweeproxy.azurewebsites.net/api/entra/devicecode";
-    var uri2 = "/DeviceCodeFlow/proxy/devicecode";
-
-    const res = await fetch(uri, {
+    const res = await fetch(authConfig.devicecodeEndpoint, {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
       body:    JSON.stringify({
@@ -147,10 +144,7 @@ function stopPolling() {
 
 async function pollToken() {
   try {
-    var uri = "https://davidmcweeproxy.azurewebsites.net/api/entra/devicecode";
-    var uri2 = "/DeviceCodeFlow/proxy/devicecode";
-
-    const res = await fetch(uri, {
+    const res = await fetch(authConfig.devicetokenEndpoint, {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
       body:    JSON.stringify({
