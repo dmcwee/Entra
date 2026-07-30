@@ -22,7 +22,7 @@ let photoObjectUrl = null;
 
   await msalInstance.initialize();
 
-  // Handle any redirect response (safe to call even when using popup flow)
+  // Process the auth code returned after loginRedirect completes.
   const redirectResponse = await msalInstance.handleRedirectPromise().catch(console.error);
   if (redirectResponse) {
     msalInstance.setActiveAccount(redirectResponse.account);
@@ -93,15 +93,10 @@ function updateNavAuthState(account) {
 
 async function handleSignIn() {
   try {
-    const response = await msalInstance.loginPopup(loginRequest);
-    msalInstance.setActiveAccount(response.account);
-    updateNavAuthState(response.account);
-    await fetchAndRenderProfile();
+    await msalInstance.loginRedirect(loginRequest);
   } catch (error) {
-    if (error.errorCode !== 'user_cancelled') {
-      console.error('Sign-in error:', error);
-      showStatus('signin-status', 'error', `Sign-in failed: ${error.message}`);
-    }
+    console.error('Sign-in error:', error);
+    showStatus('signin-status', 'error', `Sign-in failed: ${error.message}`);
   }
 }
 
@@ -109,13 +104,9 @@ async function handleSignOut() {
   const account = msalInstance.getActiveAccount();
   revokePhotoUrl();
   try {
-    await msalInstance.logoutPopup({ account });
+    await msalInstance.logoutRedirect({ account });
   } catch (error) {
     console.error('Sign-out error:', error);
-  } finally {
-    updateNavAuthState(null);
-    showView('signin');
-    hideStatus('signin-status');
   }
 }
 
@@ -129,8 +120,7 @@ async function getAccessToken() {
     return result.accessToken;
   } catch (error) {
     if (error instanceof msal.InteractionRequiredAuthError) {
-      const result = await msalInstance.acquireTokenPopup(tokenRequest);
-      return result.accessToken;
+      await msalInstance.acquireTokenRedirect(tokenRequest);
     }
     throw error;
   }
