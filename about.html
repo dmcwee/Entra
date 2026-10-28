@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Entra ID Demos</title>
+  <link rel="stylesheet" href="shared.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-brand">Entra ID Demos</div>
+    <ul class="nav-links" role="list">
+      <li><a class="nav-link" href="./index.html" aria-label="Go to home page">Home</a></li>
+      <li><a class="nav-link active" href="./about.html" aria-current="page" aria-label="About this demo suite">About</a></li>
+    </ul>
+  </nav>
+
+  <main class="main-content">
+    <section id="view-about" class="view">
+      <div class="about-container">
+
+        <h2>About These Demos</h2>
+        <p class="about-lead">
+          This suite of demo applications explores authentication flows, permission models, and
+          common security risks in Microsoft Entra ID. Each demo intentionally surfaces a
+          real-world vulnerability to make the risk concrete and observable.
+        </p>
+
+        <h3>Client Secret Demo</h3>
+        <p>
+          Demonstrates the OAuth&nbsp;2.0 Client Credentials Grant — a machine-to-machine flow
+          that authenticates as the application itself rather than a signed-in user. The demo
+          deliberately stores a client secret in browser JavaScript to show that any visitor
+          can extract it from the page source, instantly gaining the ability to acquire
+          application-scoped tokens with no user interaction required.
+        </p>
+        <p>
+          <strong>Key risk:</strong> A client secret placed in client-side code is
+          unconditionally compromised — treat it as leaked from the moment of deployment.
+        </p>
+
+        <h3>Device Code Flow Demo</h3>
+        <p>
+          Demonstrates the OAuth&nbsp;2.0 Device Authorization Grant
+          (<a href="https://datatracker.ietf.org/doc/html/rfc8628" target="_blank"
+          rel="noopener noreferrer">RFC&nbsp;8628</a>), designed for input-constrained devices.
+          A short code is displayed; the user completes sign-in on a separate device. The demo
+          illustrates how attackers exploit this flow in adversary-in-the-middle phishing
+          campaigns — sending victims a real device code and harvesting the resulting tokens
+          without stealing passwords or bypassing MFA.
+        </p>
+        <p>
+          <strong>Key risk:</strong> Device code phishing bypasses MFA because the victim
+          authenticates legitimately; only the resulting token is captured by the attacker.
+        </p>
+
+        <h3>Multi-Tenant Profile Demo</h3>
+        <p>
+          Demonstrates a multi-tenant MSAL.js application using the Authorization Code flow
+          with PKCE. Unlike a single-tenant registration, a multi-tenant app can accept
+          sign-ins from any Microsoft&nbsp;365 tenant or personal Microsoft account. The demo
+          highlights risks specific to multi-tenant registrations: guest user access,
+          unconstrained consent, and the ability for any external party to target the
+          application's permission model.
+        </p>
+        <p>
+          <strong>Key risk:</strong> Multi-tenant apps are reachable by anyone on the
+          Microsoft identity platform, requiring careful publisher verification, Conditional
+          Access policy design, and admin consent governance.
+        </p>
+
+        <h3>Mail Sender — Risky Permissions Demo</h3>
+        <p>
+          Demonstrates delegated email sending via Microsoft Graph using the
+          <code>Mail.Send</code> permission — one of the most powerful and most abused
+          delegated permissions in Microsoft&nbsp;365. Once a user consents, the application
+          can send any message, to any recipient, indefinitely, with no per-message approval.
+          The demo makes the full impact of this permission tangible by actually sending mail
+          on behalf of the signed-in user.
+        </p>
+        <p>
+          <strong>Key risk:</strong> <code>Mail.Send</code> is a high-value target for
+          OAuth phishing; a single consent event gives an attacker persistent send-as
+          capability for the life of the refresh token.
+        </p>
+
+      </div>
+    </section>
+  </main>
+
+</body>
+</html>
