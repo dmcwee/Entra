@@ -4,81 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Entra ID Demos</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --primary:      #0078d4;
-      --primary-dark: #005a9e;
-      --bg:           #f6f8fa;
-      --surface:      #ffffff;
-      --border:       #e1e4e8;
-      --text:         #24292e;
-      --text-muted:   #586069;
-      --font:         -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      --font-mono:    "Consolas", "SFMono-Regular", monospace;
-      --radius:       6px;
-    }
-    body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
-    header { background: #1f2937; color: #f9fafb; padding: 28px 32px; }
-    header h1 { font-size: 22px; font-weight: 600; }
-    header p  { font-size: 14px; color: #9ca3af; margin-top: 6px; }
-    main { flex: 1; padding: 40px 32px; max-width: 760px; }
-    section { margin-bottom: 40px; }
-    .section-title {
-      font-size: 13px; font-weight: 600; color: var(--text-muted);
-      text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 16px;
-    }
-
-    /* ── App list ── */
-    ul.app-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-    .app-item  { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
-    .app-link  {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 16px 20px; text-decoration: none; color: var(--text);
-      transition: background 0.15s, border-color 0.15s;
-    }
-    .app-link:hover { background: #eef5fc; }
-    .app-item:has(.app-link:hover) { border-color: var(--primary); }
-    .app-name  { font-size: 16px; font-weight: 500; font-family: var(--font-mono); }
-    .app-arrow { font-size: 18px; color: var(--primary); }
-
-    /* ── Settings card ── */
-    .settings-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 24px; display: flex; flex-direction: column; gap: 24px; }
-    .app-section { border-bottom: 1px solid var(--border); padding-bottom: 20px; }
-    .app-section:last-of-type { border-bottom: none; padding-bottom: 0; }
-    .app-section-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 14px; font-family: var(--font-mono); }
-    .field-group { display: flex; flex-direction: column; gap: 10px; }
-    .field { display: flex; flex-direction: column; gap: 4px; }
-    .field label { font-size: 13px; font-weight: 500; color: var(--text-muted); }
-    .field input {
-      border: 1px solid var(--border); border-radius: var(--radius);
-      padding: 8px 12px; font-size: 14px; font-family: var(--font-mono);
-      color: var(--text); background: var(--bg); width: 100%;
-      transition: border-color 0.15s;
-    }
-    .field input:focus { outline: none; border-color: var(--primary); background: #fff; }
-
-    /* ── Form footer ── */
-    .form-footer { display: flex; align-items: center; gap: 12px; margin-top: 4px; }
-    .btn-save {
-      background: var(--primary); color: #fff; border: none;
-      border-radius: var(--radius); padding: 10px 20px;
-      font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.15s;
-    }
-    .btn-save:hover { background: var(--primary-dark); }
-    .btn-clear {
-      background: transparent; color: var(--text-muted);
-      border: 1px solid var(--border); border-radius: var(--radius);
-      padding: 10px 20px; font-size: 14px; cursor: pointer; transition: background 0.15s;
-    }
-    .btn-clear:hover { background: var(--bg); }
-    #save-status { font-size: 13px; color: #155724; display: none; }
-
-    footer { padding: 20px 32px; font-size: 13px; color: var(--text-muted); border-top: 1px solid var(--border); }
-    code { font-family: var(--font-mono); background: #f3f4f6; padding: 1px 5px; border-radius: 3px; font-size: 0.875em; }
-  </style>
+  <link rel="stylesheet" href="shared.css" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-brand">Entra ID Demos</div>
+    <ul class="nav-links" role="list">
+      <li><a class="nav-link active" href="./index.html" aria-current="page" aria-label="Go to home page">Home</a></li>
+      <li><a class="nav-link" href="./about.html" aria-label="About this demo suite">About</a></li>
+    </ul>
+  </nav>
 
   <header>
     <h1>Entra ID Demo Applications</h1>
@@ -168,25 +105,6 @@
           </div>
         </div>
 
-        <!-- MultiTenant -->
-        <div class="app-section">
-          <div class="app-section-title">MultiTenant</div>
-          <div class="field-group">
-            <div class="field">
-              <label for="mt-client-id">Client ID</label>
-              <input id="mt-client-id" type="text"
-                     placeholder="40664342-8fff-4e5d-971d-b710b3336702"
-                     autocomplete="off" spellcheck="false" />
-            </div>
-            <div class="field">
-              <label for="mt-redirect-uri">Redirect URI</label>
-              <input id="mt-redirect-uri" type="text"
-                     placeholder="YOUR_REDIRECT_URI_HERE"
-                     autocomplete="off" spellcheck="false" />
-            </div>
-          </div>
-        </div>
-
         <!-- RiskyPermissions -->
         <div class="app-section">
           <div class="app-section-title">RiskyPermissions</div>
@@ -205,6 +123,25 @@
             </div>
           </div>
         </div>
+
+        <!-- MultiTenant — collapsed; defaults work without changes for most users -->
+        <details class="app-section">
+          <summary>MultiTenant</summary>
+          <div class="field-group">
+            <div class="field">
+              <label for="mt-client-id">Client ID</label>
+              <input id="mt-client-id" type="text"
+                     placeholder="40664342-8fff-4e5d-971d-b710b3336702"
+                     autocomplete="off" spellcheck="false" />
+            </div>
+            <div class="field">
+              <label for="mt-redirect-uri">Redirect URI</label>
+              <input id="mt-redirect-uri" type="text"
+                     placeholder="YOUR_REDIRECT_URI_HERE"
+                     autocomplete="off" spellcheck="false" />
+            </div>
+          </div>
+        </details>
 
         <div class="form-footer">
           <button class="btn-save" onclick="saveSettings()">Save Settings</button>

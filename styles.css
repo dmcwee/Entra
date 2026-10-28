@@ -1,0 +1,70 @@
+/* Root-specific styles; shared base is in shared.css which is linked first */
+
+body { display: flex; flex-direction: column; min-height: 100vh; }
+header { padding: 28px 32px; border-bottom: 1px solid var(--color-border); }
+header > * { max-width: 760px; margin-left: auto; margin-right: auto; }
+header h1 { font-size: 22px; font-weight: 600; }
+header p  { font-size: 14px; color: var(--color-text-muted); margin-top: 6px; }
+main { flex: 1; padding: 40px 32px; max-width: 760px; width: 100%; margin: 0 auto; }
+section { margin-bottom: 40px; }
+.section-title {
+  font-size: 13px; font-weight: 600; color: var(--color-text-muted);
+  text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 16px;
+}
+
+/* ── App list ── */
+ul.app-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.app-item  { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 8px; overflow: hidden; }
+.app-link  {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px; text-decoration: none; color: var(--color-text);
+  transition: background 0.15s, border-color 0.15s;
+}
+.app-link:hover { background: #eef5fc; }
+.app-item:has(.app-link:hover) { border-color: var(--color-primary); }
+.app-name  { font-size: 16px; font-weight: 500; font-family: var(--font-mono); }
+.app-arrow { font-size: 18px; color: var(--color-primary); }
+
+/* ── Settings card ── */
+.settings-card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 8px; padding: 24px; display: flex; flex-direction: column; gap: 24px; }
+.app-section { border-bottom: 1px solid var(--color-border); padding-bottom: 20px; }
+.app-section:last-of-type { border-bottom: none; padding-bottom: 0; }
+.app-section-title { font-size: 14px; font-weight: 600; color: var(--color-text); margin-bottom: 14px; font-family: var(--font-mono); }
+.field-group { display: flex; flex-direction: column; gap: 10px; }
+.field { display: flex; flex-direction: column; gap: 4px; }
+.field label { font-size: 13px; font-weight: 500; color: var(--color-text-muted); }
+.field input {
+  border: 1px solid var(--color-border); border-radius: var(--radius);
+  padding: 8px 12px; font-size: 14px; font-family: var(--font-mono);
+  color: var(--color-text); background: var(--color-bg); width: 100%;
+  transition: border-color 0.15s;
+}
+.field input:focus { outline: none; border-color: var(--color-primary); background: #fff; }
+
+/* ── Form footer ── */
+.form-footer { display: flex; align-items: center; gap: 12px; margin-top: 4px; }
+.btn-save {
+  background: var(--color-primary); color: #fff; border: none;
+  border-radius: var(--radius); padding: 10px 20px;
+  font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.15s;
+}
+.btn-save:hover { background: var(--color-primary-dark); }
+.btn-clear {
+  background: transparent; color: var(--color-text-muted);
+  border: 1px solid var(--color-border); border-radius: var(--radius);
+  padding: 10px 20px; font-size: 14px; cursor: pointer; transition: background 0.15s;
+}
+.btn-clear:hover { background: var(--color-bg); }
+#save-status { font-size: 13px; color: #155724; display: none; }
+
+/* ── Collapsible section ── */
+details.app-section > summary {
+  list-style: none; cursor: pointer; display: flex; align-items: center; gap: 6px;
+  font-size: 14px; font-weight: 600; color: var(--color-text-muted); margin-bottom: 0;
+  font-family: var(--font-mono);
+}
+details.app-section > summary::before { content: '▶'; font-size: 10px; transition: transform 0.15s; }
+details.app-section[open] > summary::before { transform: rotate(90deg); }
+details.app-section[open] > summary { margin-bottom: 14px; }
+
+footer { padding: 20px 32px; font-size: 13px; color: var(--color-text-muted); border-top: 1px solid var(--color-border); }
